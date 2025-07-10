@@ -22,7 +22,6 @@ jobs:
       MONGODB_USERNAME: dlugozima1993
       MONGODB_PASSWORD: Trulvzit6MEoFNjT
       PORT: 8080
-    environment: testing
     runs-on: ubuntu-latest
     steps:
       - name: Get Code
