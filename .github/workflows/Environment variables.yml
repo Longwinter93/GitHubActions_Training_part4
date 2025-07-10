@@ -18,9 +18,9 @@ jobs:
   test:
 #We add environment variables to this a job test - they will be available only in this job - they are job environment variables
     env:
-      MONGODB_CLUSTER_ADDRESS: cluster0.xkyncki.mongodb.net
-      MONGODB_USERNAME: dlugozima1993
-      MONGODB_PASSWORD: Trulvzit6MEoFNjT
+      MONGODB_CLUSTER_ADDRESS: cluster
+      MONGODB_USERNAME: username
+      MONGODB_PASSWORD: password
       PORT: 8080
     runs-on: ubuntu-latest
     steps:
