@@ -10,11 +10,12 @@ on:
 #but if we add environment variable to a job, it will be available for this job only
 #All jobs in this workflow use always the same database. This env MONGODB_DB_NAME will be available for all jobs
 #Unless any jobs will override it
+#It is a workflow environment variable
 env:
   MONGODB_DB_NAME: gha-dome
 jobs:
   test:
-#We add environment variables to this a job test - they will be available only in this job
+#We add environment variables to this a job test - they will be available only in this job - they are job environment variables
     env:
       MONGODB_CLUSTER_ADDRESS: cluster0.xkyncki.mongodb.net
       MONGODB_USERNAME: dlugozima1993
@@ -33,6 +34,7 @@ jobs:
       - name: Install dependencies
         run: npm ci
 #we add $PORT to interpolate and output the value of an environment variable in a Linux machine
+#Syntax in Linux ($PORT) is a different than syntax in PowerShell 
 #A PORT environment variable is used in app.js and playwrightconfig.js files
       - name: Run server
         run: npm start & npx wait-on http://127.0.0.1:$PORT
@@ -50,6 +52,8 @@ jobs:
 #MONGODB_DB_NAME is available because it is a workflow environment variable
       - name: Output information
         run: |        
-          echo "MONGODB_USERNAME: ${{ env.MONGODB_USERNAME }}"
+          echo "MONGODB_USERNAME: ${{ env.MONGODB_DB_NAME }}"
           echo "MONGODB_DB_NAME: $MONGODB_DB_NAME
+          echo "MONGODB_USERNAME: $MONGODB_USERNAME
+
 
