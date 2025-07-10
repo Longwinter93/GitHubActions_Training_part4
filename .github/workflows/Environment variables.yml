@@ -1,0 +1,54 @@
+name: Environment variables
+on:
+  push:
+    branches:
+      - main
+      - dev
+#Adding environment variables to connect to database, where we can find environment variables in database.js and app.js
+#and in playwright.config.js
+#We can add environment variables in jobs and steps level
+#but if we add environment variable to a job, it will be available for this job only
+#All jobs in this workflow use always the same database. This env MONGODB_DB_NAME will be available for all jobs
+#Unless any jobs will override it
+env:
+  MONGODB_DB_NAME: gha-dome
+jobs:
+  test:
+#We add environment variables to this a job test - they will be available only in this job
+    env:
+      MONGODB_CLUSTER_ADDRESS: cluster0.15pwqcc.mongodb.net
+      MONGODB_USERNAME: maximilian
+      MONGODB_PASSWORD: X34Mqtpg10D8RGTi
+      PORT: 8080
+    environment: testing
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Code
+        uses: actions/checkout@v3
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: npm-deps-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        run: npm ci
+#we add $PORT to interpolate and output the value of an environment variable in a Linux machine
+      - name: Run server
+        run: npm start & npx wait-on http://127.0.0.1:$PORT
+      - name: Run tests
+        run: npm test
+#We add env context that gives us access to all environment variables that are avaiable to this job
+      - name: Output information
+        run: |
+           echo "MONGODB_USERNAME: ${{ env.MONGODB_USERNAME }}"
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+#MONGODB_USERNAME it is not available because it is a job environment variable
+#MONGODB_DB_NAME is available because it is a workflow environment variable
+      - name: Output information
+        run: |        
+          echo "MONGODB_USERNAME: ${{ env.MONGODB_USERNAME }}"
+          echo "MONGODB_DB_NAME: $MONGODB_DB_NAME
+
