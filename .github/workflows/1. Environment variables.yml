@@ -1,4 +1,4 @@
-name: Secrets
+name: Environment variables
 on:
   push:
     branches:
@@ -16,13 +16,11 @@ env:
   MONGODB_DB_NAME: gha-demo
 jobs:
   test:
-#We store two credentials values in Secrets. Thus, we reference these secrets instead of environment variables
-#We use secrets. context instead of env. to access secrets that are defined in this repo
-#After running workflows, values stored as secrets will be injected and these values will never be exposed
+#We add environment variables to this a job test - they will be available only in this job - they are job environment variables
     env:
       MONGODB_CLUSTER_ADDRESS: cluster
-      MONGODB_USERNAME: ${{ secrets.MONGODB_USERNAME }}
-      MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
+      MONGODB_USERNAME: username
+      MONGODB_PASSWORD: password
       PORT: 8080
     runs-on: ubuntu-latest
     steps:
@@ -56,7 +54,7 @@ jobs:
 #This job has only access to a workflow environment variable
       - name: Output information
         run: |        
-          echo "MONGODB_DB_NAME: ${{ env.MONGODB_DB_NAME }}"
+          echo "MONGODB_USERNAME: ${{ env.MONGODB_DB_NAME }}"
           echo "MONGODB_DB_NAME: $MONGODB_DB_NAME
           echo "MONGODB_USERNAME: $MONGODB_USERNAME
 
@@ -64,4 +62,3 @@ jobs:
 
 #We can see on GitHub Action, all this information is displayed in each step for example Output Information on a test job
 #On a deploy job, we can see that values are displayed except for MONGODB_USERNAME, because this job does not have access to this username
-#
