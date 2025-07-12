@@ -7,4 +7,3 @@
 <br>Variables are used to store information
 <br>Secrets are used to store sensitive information
 <br>All steps are described in yml files in a workflow directory
-<br>  
